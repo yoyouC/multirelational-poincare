@@ -170,12 +170,14 @@ if __name__ == '__main__':
     parser.add_argument("--cuda", type=bool, default=True, nargs="?",
                     help="Whether to use cuda (GPU) or not (CPU).")
     parser.add_argument("--save_path", type=str, default="models/", nargs="?", help="Path to save the model.")
+    parser.add_argument("--seed", type=int, default=40, nargs="?",
+                    help="Numpy random seed.")
 
     args = parser.parse_args()
     dataset = args.dataset
     data_dir = "data/%s/" % dataset
     torch.backends.cudnn.deterministic = True 
-    seed = 40
+    seed = args.seed
     np.random.seed(seed)
     torch.manual_seed(seed)
     if torch.cuda.is_available:
