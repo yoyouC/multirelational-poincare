@@ -35,8 +35,8 @@ class Experiment:
 
     def save(self, f):
         torch.save(self.model.state_dict(), f + '_model')
-        pickle.dump(self.entity_idxs, f + '_entity_idxs')
-        pickle.dump(self.relation_idxs, f + '_relation_idxs')
+        pickle.dump(self.entity_idxs, open(f + '_entity_idxs', 'wb'))
+        pickle.dump(self.relation_idxs, open(f + '_entity_idxs', 'wb'))
 
     def evaluate(self, model, data):
         hits = []
