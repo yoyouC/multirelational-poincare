@@ -6,12 +6,13 @@ from load_data import Data
 from model import *
 from rsgd import *
 import argparse
+import pickle
 
     
 class Experiment:
 
     def __init__(self, learning_rate=50, dim=40, nneg=50, model="poincare",
-                 num_iterations=500, batch_size=128, cuda=False):
+                 num_iterations=500, batch_size=128, cuda=False, save_path=None):
         self.model = model
         self.learning_rate = learning_rate
         self.dim = dim
@@ -19,6 +20,7 @@ class Experiment:
         self.num_iterations = num_iterations
         self.batch_size = batch_size
         self.cuda = cuda
+        self.save_path = save_path
         
     def get_data_idxs(self, data):
         data_idxs = [(self.entity_idxs[data[i][0]], self.relation_idxs[data[i][1]], \
@@ -31,6 +33,11 @@ class Experiment:
             er_vocab[(triple[idxs[0]], triple[idxs[1]])].append(triple[idxs[2]])
         return er_vocab
 
+    def save(self, f):
+        torch.save(self.model.state_dict(), f + '_model')
+        pickle.save(self.entity_idxs, f + '_entity_idxs')
+        pickle.save(self.relation_idxs, f + '_relation_idxs')
+        
     def evaluate(self, model, data):
         hits = []
         ranks = []
@@ -96,6 +103,8 @@ class Experiment:
         
         if self.cuda:
             model.cuda()
+        
+        self.model = model
             
         er_vocab = self.get_er_vocab(train_data_idxs)
 
@@ -139,6 +148,7 @@ class Experiment:
                 if not it%5:
                     print("Test:")
                     self.evaluate(model, d.test_data)
+                    self.save(self.save_path)
 
 
 if __name__ == '__main__':
@@ -159,6 +169,7 @@ if __name__ == '__main__':
                     help="Embedding dimensionality.")
     parser.add_argument("--cuda", type=bool, default=True, nargs="?",
                     help="Whether to use cuda (GPU) or not (CPU).")
+    parser.add_argument("--save_path", type=str, default="models/", nargs="?", help="Path to save the model.")
 
     args = parser.parse_args()
     dataset = args.dataset
@@ -172,7 +183,7 @@ if __name__ == '__main__':
     d = Data(data_dir=data_dir)
     experiment = Experiment(learning_rate=args.lr, batch_size=args.batch_size, 
                             num_iterations=args.num_iterations, dim=args.dim, 
-                            cuda=args.cuda, nneg=args.nneg, model=args.model)
+                            cuda=args.cuda, nneg=args.nneg, model=args.model, save_path=args.save_path)
     experiment.train_and_eval()
                 
 
