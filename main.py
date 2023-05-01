@@ -172,6 +172,7 @@ if __name__ == '__main__':
     parser.add_argument("--save_path", type=str, default="models/", nargs="?", help="Path to save the model.")
     parser.add_argument("--seed", type=int, default=40, nargs="?",
                     help="Numpy random seed.")
+    parser.add_argument("--reverse", type=bool, default=True, nargs="?",)
 
     args = parser.parse_args()
     dataset = args.dataset
@@ -182,7 +183,7 @@ if __name__ == '__main__':
     torch.manual_seed(seed)
     if torch.cuda.is_available:
         torch.cuda.manual_seed_all(seed) 
-    d = Data(data_dir=data_dir)
+    d = Data(data_dir=data_dir, reverse=args.reverse)
     experiment = Experiment(learning_rate=args.lr, batch_size=args.batch_size, 
                             num_iterations=args.num_iterations, dim=args.dim, 
                             cuda=args.cuda, nneg=args.nneg, model=args.model, save_path=args.save_path)
