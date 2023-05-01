@@ -172,7 +172,7 @@ if __name__ == '__main__':
     parser.add_argument("--save_path", type=str, default="models/", nargs="?", help="Path to save the model.")
     parser.add_argument("--seed", type=int, default=40, nargs="?",
                     help="Numpy random seed.")
-    parser.add_argument("--reverse", type=bool, default=True, nargs="?",)
+    parser.add_argument("--reverse", type=bool, default=False, nargs="?",)
 
     args = parser.parse_args()
     dataset = args.dataset
