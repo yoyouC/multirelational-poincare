@@ -27,5 +27,14 @@ class Data:
         return relations
 
     def get_entities(self, data):
+        for d in data:
+            try:
+                a, b = d[0], d[2]
+            except Exception as e:
+                print(e)
+                print(d)
+                # throw error
+                break
+
         entities = sorted(list(set([d[0] for d in data]+[d[2] for d in data])))
         return entities
