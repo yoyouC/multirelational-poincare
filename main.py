@@ -36,7 +36,7 @@ class Experiment:
     def save(self, f):
         torch.save(self.model.state_dict(), f + '_model')
         pickle.dump(self.entity_idxs, open(f + '_entity_idxs', 'wb'))
-        pickle.dump(self.relation_idxs, open(f + '_entity_idxs', 'wb'))
+        pickle.dump(self.relation_idxs, open(f + '_relation_idxs', 'wb'))
 
     def evaluate(self, model, data):
         hits = []
@@ -182,7 +182,8 @@ if __name__ == '__main__':
     np.random.seed(seed)
     torch.manual_seed(seed)
     if torch.cuda.is_available:
-        torch.cuda.manual_seed_all(seed) 
+        torch.cuda.manual_seed_all(seed)
+    print(args.reverse)
     d = Data(data_dir=data_dir, reverse=args.reverse)
     experiment = Experiment(learning_rate=args.lr, batch_size=args.batch_size, 
                             num_iterations=args.num_iterations, dim=args.dim, 
